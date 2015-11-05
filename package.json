@@ -1,0 +1,21 @@
+{
+  "title": "PKTranslate",
+  "name": "pktranslate",
+  "version": "0.1.3",
+  "description": "English-Russian translator using Yandex.Translate API",
+  "main": "index.js",
+  "author": "pk",
+  "engines": {
+    "firefox": ">=40.0"
+  },
+  "license": "MIT",
+  "preferences": [
+      {
+        "name": "yandexTranslateApiKey",
+        "value": "",
+        "type": "string",
+        "title": "Yandex.Translate API ключ",
+        "description": "API-Ключ (бесплатный) полученный от yandex: https://tech.yandex.ru/translate/"
+      }
+    ]
+}
