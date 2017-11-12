@@ -7,18 +7,33 @@
   "icons": {
     "16": "data/translate-16.png",
     "32": "data/translate-32.png",
+    "48": "data/translate-48.png",
     "64": "data/translate-64.png"
   },
 
   "content_scripts": {
-    "js": ["data/content_script.js"]
-  }
+    "js": ["scripts/webpage/content_script.js", "lib/utils.js"]
+  },
 
   "applications": {
     "gecko": {
       "id": "@pktranslate"
     }
+  },
+
+  "permissions": ["activeTab", "storage", "webRequest"],
+
+  "browser_action": {
+    "default_icon": "data/translate-32.png",
+    "default_title": "Перевести выделенный текст"
+//    "default_popup": "popup/choose_beast.html"
+  },
+
+  "background": {
+    "scripts": ["scripts/background/background.js", "lib/utils.js"]
+  },
+
+  "options_ui": {
+    "page": "options/options.html"
   }
-
-
 }
