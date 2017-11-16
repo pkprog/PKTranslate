@@ -11,9 +11,13 @@
     "64": "data/translate-64.png"
   },
 
-  "content_scripts": {
-    "js": ["scripts/webpage/content_script.js", "lib/utils.js"]
-  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scripts/webpage/content_script.js"],
+      "run_at": "document_end"
+    }
+  ],
 
   "applications": {
     "gecko": {
@@ -21,16 +25,15 @@
     }
   },
 
-  "permissions": ["activeTab", "storage", "webRequest"],
+  "permissions": ["activeTab", "storage", "webRequest", "tabs"],
 
   "browser_action": {
     "default_icon": "data/translate-32.png",
-    "default_title": "Перевести выделенный текст"
-//    "default_popup": "popup/choose_beast.html"
+    "default_title": "3-Перевести выделенный текст"
   },
 
   "background": {
-    "scripts": ["scripts/background/background.js", "lib/utils.js"]
+    "scripts": ["lib/utils.js", "scripts/background/background.js"]
   },
 
   "options_ui": {

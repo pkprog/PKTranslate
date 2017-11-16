@@ -1,18 +1,55 @@
-(function() {
-    /**
+const PK_TRANSLATE_APP_NAME = "PKTranslate.content_script";
+
+// (function() {
+    /*
      * Check and set a global guard variable.
      * If this content script is injected into the same page again,
      * it will do nothing next time.
      */
-    if (window.hasRunPKTranslator) {
-        return;
+    // if (window.hasRunPKTranslator) {
+    //     return;
+    // }
+    // window.hasRunPKTranslator = true;
+
+
+    function isDefined(value) {
+        return !(value === undefined);
     }
-    window.hasRunPKTranslator = true;
+
+    function isFunction(functionName) {
+        return (typeof functionName === 'function');
+    }
+
+    function getFormattedDateTime(dateTime) {
+        if (isFunction(dateTime.getMonth)) {
+            const day = dateTime.getDay();
+            const monthIndex = dateTime.getMonth();
+            const year = dateTime.getFullYear();
+            const hour = dateTime.getHours();
+            const min = dateTime.getMinutes();
+            const sec = dateTime.getSeconds();
+
+            return day + "." + (monthIndex+1) + "." + year + " " + hour + ":" + min + ":" + sec;
+        }
+        return null;
+    }
+
+    function logDebug(text) {
+        console.debug(PK_TRANSLATE_APP_NAME + ": [" + getFormattedDateTime(new Date()) + "] " + text);
+    }
+
+    function logError(text) {
+        console.error(PK_TRANSLATE_APP_NAME + ": [" + getFormattedDateTime(new Date()) + "] " + text);
+    }
+
+    logDebug("loaded");
 
     /**
      * Listen for messages from the background script.
      */
     browser.runtime.onMessage.addListener((message) => {
+        logDebug("message from backgroupd script received");
+
         if (message.command === "askSelected") {
             let selected = getCurrentSelection();
             browser.runtime.sendMessage({
@@ -64,6 +101,7 @@
      * create and style an IMG node pointing to
      * that image, then insert the node into the document.
      */
+/*
     function insertBeast(beastURL) {
         removeExistingBeasts();
         let beastImage = document.createElement("img");
@@ -72,17 +110,20 @@
         beastImage.className = "beastify-image";
         document.body.appendChild(beastImage);
     }
+*/
 
     /**
      * Remove every beast from the page.
      */
+/*
     function removeExistingBeasts() {
         let existingBeasts = document.querySelectorAll(".beastify-image");
         for (let beast of existingBeasts) {
             beast.remove();
         }
     }
+*/
 
 
-})();
+// })();
 
