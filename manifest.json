@@ -33,10 +33,12 @@
   },
 
   "background": {
-    "scripts": ["lib/utils.js", "scripts/background/background.js"]
+    "scripts": ["lib/utils.js", "lib/processWithYandex.js", "scripts/background/background.js"]
   },
 
   "options_ui": {
-    "page": "options/options.html"
+    "page": "options/options.html",
+    "browser_style": true
   }
+
 }
