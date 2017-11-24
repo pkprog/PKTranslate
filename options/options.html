@@ -7,16 +7,17 @@
 </head>
 <body>
     <div style="width: 100%">
-        <label for="descr" style="width: 20%; display: inline-block;">Описание</label>
-        <input id="descr"
-               type="text"
-               value="API-Ключ (бесплатный) полученный от yandex: https://tech.yandex.ru/translate/"
-               disabled=""
-               style="width: 80%;"
-        />
+        <label for="linkToYandexAPI" style="display: inline-block; font-family: 'Segoe UI', sans-serif;font-size: 1.25rem;">Описание</label>
+        <p><a id="linkToYandexAPI"
+              href="https://tech.yandex.ru/translate/"
+              target="_blank"
+              style="font-family: 'Segoe UI', sans-serif; font-size: 1.25rem;"
+        >API-Ключ (бесплатный), полученный от yandex: https://tech.yandex.ru/translate/
+        </a></p>
     </div>
+    <hr/>
     <div style="width: 100%;">
-        <label id="yandexApiKeyLabel" for="yandexApiKey" style="width: 20%; display: inline-block;">Yandex.Translate API ключ</label>
+        <label id="yandexApiKeyLabel" for="yandexApiKey" style="display: inline-block; font-family: 'Segoe UI', sans-serif;font-size: 1.25rem;">Yandex.Translate API ключ</label>
         <input id="yandexApiKey"
                type="text"
                maxlength="1000"
@@ -28,14 +29,3 @@
     <script src="options.js"></script>
 </body>
 </html>
-
-
-<!--"preferences": [
-{
-"name": "yandexTranslateApiKey",
-"value": "",
-"type": "string",
-"title": "Yandex.Translate API ключ",
-"description": "API-Ключ (бесплатный) полученный от yandex: https://tech.yandex.ru/translate/"
-}
-]-->
