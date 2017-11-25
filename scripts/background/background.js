@@ -1,4 +1,5 @@
 const PK_TRANSLATE_APP_NAME = "PKTranslate.background";
+const PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY = "yandexTranslateApiKey";
 
 function getFormattedDateTime(dateTime) {
     if (isFunction(dateTime.getMonth)) {
@@ -69,8 +70,29 @@ function reportExecuteScriptError(error) {
 browser.runtime.onMessage.addListener((message) => {
     logDebug("message from content_script script received");
     if (message.command === "takeSelected") {
-        let selected = message.selected;
+        const selected = message.selected;
         logDebug(selected);
+
+        restoreOptions(function(apiKey){
+            translatorByYandex.doTranslate(selected, apiKey, function(text) {
+                logDebug("Get translated text: "+ text);
+            });
+        });
     }
 });
 
+function restoreOptions(makeAfterRestoreFunction) {
+    browser.storage.local.get(PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY).then(function(result) {
+        let apiKey;
+        if (result instanceof Array && result.length === 1) { //for old Firefox
+            logDebug("Old Firefox request: " + result[0]);
+            apiKey = result[0];
+        } else { //for new Firefox
+            logDebug("New Firefox request: " + result);
+            apiKey = result;
+        }
+        makeAfterRestoreFunction(apiKey);
+    }, function(error) {
+        logError("Error:" + error);
+    });
+}
