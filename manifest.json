@@ -25,7 +25,7 @@
     }
   },
 
-  "permissions": ["activeTab", "storage", "webRequest", "tabs"],
+  "permissions": ["activeTab", "storage", "webRequest", "tabs", "find"],
 
   "browser_action": {
     "default_icon": "data/translate-32.png",

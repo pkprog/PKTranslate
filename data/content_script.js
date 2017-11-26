@@ -1,8 +1,8 @@
-﻿function isDefined(value) {
+﻿/*function isDefined(value) {
     return !(value === undefined);
-};
+};*/
 
-function getCurrentSelection() {
+/*function getCurrentSelection() {
     var MAX_SELECTION_STRING_LENGTH = 400;
 
 //console.log("*****" +  window.getSelection().toString());
@@ -30,13 +30,13 @@ function getCurrentSelection() {
         }
     }
     return result;
-};
+};*/
 
-function process(){
+/*function process(){
     self.port.on("pktranslator-get-selected-text", function(message) {
         var selectedText = getCurrentSelection();
         self.port.emit("pktranslator-select-received", selectedText);
     });
-};
+};*/
 
-process();
+//process();

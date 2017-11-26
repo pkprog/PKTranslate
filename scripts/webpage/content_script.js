@@ -51,7 +51,7 @@ const PK_TRANSLATE_APP_NAME = "PKTranslate.content_script";
         logDebug("message from backgroupd script received");
 
         if (message.command === "askSelected") {
-            let selected = getCurrentSelection();
+            const selected = getCurrentSelection();
             browser.runtime.sendMessage({
                 command: "takeSelected",
                 selected: selected
@@ -63,19 +63,23 @@ const PK_TRANSLATE_APP_NAME = "PKTranslate.content_script";
         logDebug("*****Start getCurrentSelection");
 
         const MAX_SELECTION_STRING_LENGTH = 400;
+        // let selection = null;
 
-        let selection = window.getSelection();
-        logDebug("*****window.getSelection()=" +  selection);
-        if (isDefined(selection) && typeof selection === 'string' && selection != null && selection.toString().length > 0) {
+        let selectionString = window.getSelection().toString();
+        logDebug("*****window.getSelection()=" +  selectionString);
+
+        if (selectionString !== null && selectionString.length > 0) {
             //ok
         } else {
+            logDebug("*****Start searching selection in frames");
+
             let frames = window.frames;
-            if (isDefined(frames) && frames != null && isDefined(frames.length) && frames.length > 0) {
-                selection = "";
+            if (isDefined(frames) && frames !== null && isDefined(frames.length) && frames.length > 0) {
+                selectionString = null;
                 for (let i = 0; i < frames.length; i++) {
-                    let inFrameSelection = frames[i].getSelection();
-                    if (isDefined(inFrameSelection) && inFrameSelection != null &&inFrameSelection.toString() != null && inFrameSelection.toString().length > 0) {
-                        selection = frames[i].getSelection().toString();
+                    let inFrameSelectionString = frames[i].getSelection().toString();
+                    if (inFrameSelectionString !== null && inFrameSelectionString.length > 0) {
+                        selectionString = inFrameSelectionString;
                         break;
                     }
                 }
@@ -83,11 +87,11 @@ const PK_TRANSLATE_APP_NAME = "PKTranslate.content_script";
         }
 
         let result = null;
-        if (isDefined(selection) && selection != null) {
-            if (selection.toString().length > MAX_SELECTION_STRING_LENGTH) {
-                result = selection.toString().substring(0, MAX_SELECTION_STRING_LENGTH);
+        if (selectionString !== null) {
+            if (selectionString.length > MAX_SELECTION_STRING_LENGTH) {
+                result = selectionString.substring(0, MAX_SELECTION_STRING_LENGTH);
             } else {
-                result = selection.toString();
+                result = selectionString;
             }
         } else {
             result = null;

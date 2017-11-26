@@ -68,7 +68,7 @@ function reportExecuteScriptError(error) {
  * Listen for messages from the content_script.
  */
 browser.runtime.onMessage.addListener((message) => {
-    logDebug("message from content_script script received");
+    logDebug("message received from content_script script");
     if (message.command === "takeSelected") {
         const selected = message.selected;
         logDebug(selected);
@@ -85,11 +85,11 @@ function restoreOptions(makeAfterRestoreFunction) {
     browser.storage.local.get(PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY).then(function(result) {
         let apiKey;
         if (result instanceof Array && result.length === 1) { //for old Firefox
-            logDebug("Old Firefox request: " + result[0]);
-            apiKey = result[0];
+            logDebug("Old Firefox request: " + result[0][PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY]);
+            apiKey = result[0][PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY];
         } else { //for new Firefox
-            logDebug("New Firefox request: " + result);
-            apiKey = result;
+            logDebug("New Firefox request: " + result[PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY]);
+            apiKey = result[PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY];
         }
         makeAfterRestoreFunction(apiKey);
     }, function(error) {

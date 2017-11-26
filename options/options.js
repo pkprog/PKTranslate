@@ -2,6 +2,14 @@ const PK_TRANSLATE_APP_NAME = "PKTranslate.options";
 const PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY = "yandexTranslateApiKey";
 const PK_TRANSLATE_OPTIONS_INPUT_ID_YANDEX_API_KEY = "#yandexApiKey";
 
+function isDefined(value) {
+    return !(value === undefined);
+}
+
+function isFunction(functionName) {
+    return (typeof functionName == 'function');
+}
+
 function getFormattedDateTime(dateTime) {
     if (isFunction(dateTime.getMonth)) {
         const day = dateTime.getDay();
@@ -41,25 +49,26 @@ document.addEventListener('DOMContentLoaded', restoreOptions);
 //////////////////////////////////////////////////////////////////////
 
 function saveOptions() {
-    const dataForSave = {
-        yandexTranslateApiKey: document.querySelector(PK_TRANSLATE_OPTIONS_INPUT_ID_YANDEX_API_KEY).value
-    };
+    const dataForSave = {};
+    dataForSave[PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY] = document.querySelector(PK_TRANSLATE_OPTIONS_INPUT_ID_YANDEX_API_KEY).value;
+
     browser.storage.local.set(dataForSave).then(function(result){
-        logDebug("Save options successful: " + result);
+        logDebug("Saving options successful: " + result);
     }, function(error) {
-        logError("Save options error: " + error);
+        logError("Saving options error: " + error);
     });
 }
 
 function restoreOptions() {
-    browser.storage.local.get(PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY).then (function(result) {
+    browser.storage.local.get(PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY).then(function(result) {
+        logDebug("Restore options successful");
         if (result instanceof Array && result.length === 1) { //for old Firefox
-            logDebug("Old Firefox request: " + result[0]);
+            logDebug("Restore options: Old Firefox request: " + result[0][PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY]);
         } else { //for new Firefox
-            logDebug("New Firefox request: " + result);
+            logDebug("Restore options: New Firefox request: " + result[PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY]);
         }
     }, function(error) {
-        logError("Error:" + error);
+        logError("Error restoring options:" + error);
     });
 
     // let storageItem = browser.storage.managed.get('yandexTranslateApiKey');
