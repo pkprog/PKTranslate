@@ -11,7 +11,6 @@ const PK_TRANSLATE_APP_NAME = "PKTranslate.content_script";
     // }
     // window.hasRunPKTranslator = true;
 
-
     function isDefined(value) {
         return !(value === undefined);
     }
@@ -113,18 +112,6 @@ const PK_TRANSLATE_APP_NAME = "PKTranslate.content_script";
         beastImage.style.height = "100vh";
         beastImage.className = "beastify-image";
         document.body.appendChild(beastImage);
-    }
-*/
-
-    /**
-     * Remove every beast from the page.
-     */
-/*
-    function removeExistingBeasts() {
-        let existingBeasts = document.querySelectorAll(".beastify-image");
-        for (let beast of existingBeasts) {
-            beast.remove();
-        }
     }
 */
 

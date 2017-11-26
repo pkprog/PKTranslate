@@ -25,7 +25,9 @@ function logError(text) {
 
 logDebug("loaded");
 
-browser.browserAction.onClicked.addListener(toggleStartTranslate);
+browser.browserAction.onClicked.addListener(function(e) {
+    toggleStartTranslate();
+});
 
 /**
  * Click-handler.
@@ -76,6 +78,14 @@ browser.runtime.onMessage.addListener((message) => {
         restoreOptions(function(apiKey){
             translatorByYandex.doTranslate(selected, apiKey, function(text) {
                 logDebug("Get translated text: "+ text);
+
+                browser.browserAction.setPopup({popup: "data/panel_body.html"});
+                browser.browserAction.openPopup().then(function() {
+                    browser.runtime.sendMessage(null, {
+                        command: "translatedText",
+                        text: text
+                    });
+                })
             });
         });
     }

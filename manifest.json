@@ -29,7 +29,9 @@
 
   "browser_action": {
     "default_icon": "data/translate-32.png",
-    "default_title": "3-Перевести выделенный текст"
+    "default_title": "3-Перевести выделенный текст",
+    "browser_style": true
+//    "default_popup": "data/panel_body.html"
   },
 
   "background": {
