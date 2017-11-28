@@ -1,33 +1,18 @@
 const PK_TRANSLATE_APP_NAME = "PKTranslate.background";
-const PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY = "yandexTranslateApiKey";
-
-function getFormattedDateTime(dateTime) {
-    if (isFunction(dateTime.getMonth)) {
-        const day = dateTime.getDay();
-        const monthIndex = dateTime.getMonth();
-        const year = dateTime.getFullYear();
-        const hour = dateTime.getHours();
-        const min = dateTime.getMinutes();
-        const sec = dateTime.getSeconds();
-
-        return day + "." + (monthIndex+1) + "." + year + " " + hour + ":" + min + ":" + sec;
-    }
-    return null;
-}
 
 function logDebug(text) {
-    console.debug(PK_TRANSLATE_APP_NAME + ": [" + getFormattedDateTime(new Date()) + "] " + text);
+    serviceFunctions.logDebugApplication(PK_TRANSLATE_APP_NAME, text);
 }
 
 function logError(text) {
-    console.error(PK_TRANSLATE_APP_NAME + ": [" + getFormattedDateTime(new Date()) + "] " + text);
+    serviceFunctions.logErrorApplication(PK_TRANSLATE_APP_NAME, text);
 }
 
 logDebug("loaded");
 
-browser.browserAction.onClicked.addListener(function(e) {
-    toggleStartTranslate();
-});
+// browser.browserAction.onClicked.addListener(function(e) {
+//     toggleStartTranslate();
+// });
 
 /**
  * Click-handler.
@@ -70,28 +55,33 @@ function reportExecuteScriptError(error) {
  * Listen for messages from the content_script.
  */
 browser.runtime.onMessage.addListener((message) => {
-    logDebug("message received from content_script script");
+    logDebug("message received");
+    if (message.command === "PANEL_SCRIPT_LOADED") {
+        logDebug("message PANEL_SCRIPT_LOADED received from panel_script script");
+        clickStartTranslate();
+    } else
     if (message.command === "takeSelected") {
+        logDebug("message received from content_script script");
         const selected = message.selected;
         logDebug(selected);
 
         restoreOptions(function(apiKey){
+            if (!serviceFunctions.isDefined(apiKey) || apiKey === null) {
+                logError("Yandex API key value not defined");
+            }
             translatorByYandex.doTranslate(selected, apiKey, function(text) {
                 logDebug("Get translated text: "+ text);
 
-                browser.browserAction.setPopup({popup: "data/panel_body.html"});
-                browser.browserAction.openPopup().then(function() {
-                    browser.runtime.sendMessage(null, {
-                        command: "translatedText",
-                        text: text
-                    });
-                })
+                browser.runtime.sendMessage(null, {
+                    command: "TRANSLATED_TEXT",
+                    text: text
+                });
             });
         });
     }
 });
 
-function restoreOptions(makeAfterRestoreFunction) {
+function restoreOptions(doAfterRestoreFunction) {
     browser.storage.local.get(PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY).then(function(result) {
         let apiKey;
         if (result instanceof Array && result.length === 1) { //for old Firefox
@@ -101,7 +91,7 @@ function restoreOptions(makeAfterRestoreFunction) {
             logDebug("New Firefox request: " + result[PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY]);
             apiKey = result[PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY];
         }
-        makeAfterRestoreFunction(apiKey);
+        doAfterRestoreFunction(apiKey);
     }, function(error) {
         logError("Error:" + error);
     });

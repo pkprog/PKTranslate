@@ -11,34 +11,12 @@ const PK_TRANSLATE_APP_NAME = "PKTranslate.content_script";
     // }
     // window.hasRunPKTranslator = true;
 
-    function isDefined(value) {
-        return !(value === undefined);
-    }
-
-    function isFunction(functionName) {
-        return (typeof functionName === 'function');
-    }
-
-    function getFormattedDateTime(dateTime) {
-        if (isFunction(dateTime.getMonth)) {
-            const day = dateTime.getDay();
-            const monthIndex = dateTime.getMonth();
-            const year = dateTime.getFullYear();
-            const hour = dateTime.getHours();
-            const min = dateTime.getMinutes();
-            const sec = dateTime.getSeconds();
-
-            return day + "." + (monthIndex+1) + "." + year + " " + hour + ":" + min + ":" + sec;
-        }
-        return null;
-    }
-
     function logDebug(text) {
-        console.debug(PK_TRANSLATE_APP_NAME + ": [" + getFormattedDateTime(new Date()) + "] " + text);
+        serviceFunctions.logDebugApplication(PK_TRANSLATE_APP_NAME, text);
     }
 
     function logError(text) {
-        console.error(PK_TRANSLATE_APP_NAME + ": [" + getFormattedDateTime(new Date()) + "] " + text);
+        serviceFunctions.logErrorApplication(PK_TRANSLATE_APP_NAME, text);
     }
 
     logDebug("loaded");
@@ -61,7 +39,6 @@ const PK_TRANSLATE_APP_NAME = "PKTranslate.content_script";
     function getCurrentSelection() {
         logDebug("*****Start getCurrentSelection");
 
-        const MAX_SELECTION_STRING_LENGTH = 400;
         // let selection = null;
 
         let selectionString = window.getSelection().toString();
@@ -73,12 +50,13 @@ const PK_TRANSLATE_APP_NAME = "PKTranslate.content_script";
             logDebug("*****Start searching selection in frames");
 
             let frames = window.frames;
-            if (isDefined(frames) && frames !== null && isDefined(frames.length) && frames.length > 0) {
+            if (serviceFunctions.isDefined(frames) && frames !== null && serviceFunctions.isDefined(frames.length) && frames.length > 0) {
                 selectionString = null;
                 for (let i = 0; i < frames.length; i++) {
                     let inFrameSelectionString = frames[i].getSelection().toString();
                     if (inFrameSelectionString !== null && inFrameSelectionString.length > 0) {
                         selectionString = inFrameSelectionString;
+                        logDebug("*****frame.getSelection()=" +  selectionString);
                         break;
                     }
                 }
@@ -98,23 +76,6 @@ const PK_TRANSLATE_APP_NAME = "PKTranslate.content_script";
 
         return result;
     }
-
-    /**
-     * Given a URL to a beast image, remove all existing beasts, then
-     * create and style an IMG node pointing to
-     * that image, then insert the node into the document.
-     */
-/*
-    function insertBeast(beastURL) {
-        removeExistingBeasts();
-        let beastImage = document.createElement("img");
-        beastImage.setAttribute("src", beastURL);
-        beastImage.style.height = "100vh";
-        beastImage.className = "beastify-image";
-        document.body.appendChild(beastImage);
-    }
-*/
-
 
 // })();
 

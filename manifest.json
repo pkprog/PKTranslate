@@ -14,7 +14,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["scripts/webpage/content_script.js"],
+      "js": ["lib/constants.js", "lib/utils.js", "scripts/webpage/content_script.js"],
       "run_at": "document_end"
     }
   ],
@@ -30,12 +30,12 @@
   "browser_action": {
     "default_icon": "data/translate-32.png",
     "default_title": "3-Перевести выделенный текст",
-    "browser_style": true
-//    "default_popup": "data/panel_body.html"
+    "browser_style": true,
+    "default_popup": "data/panel_body.html"
   },
 
   "background": {
-    "scripts": ["lib/utils.js", "lib/processWithYandex.js", "scripts/background/background.js"]
+    "scripts": ["lib/constants.js", "lib/utils.js", "lib/processWithYandex.js", "scripts/background/background.js"]
   },
 
   "options_ui": {

@@ -1,35 +1,12 @@
 const PK_TRANSLATE_APP_NAME = "PKTranslate.options";
-const PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY = "yandexTranslateApiKey";
 const PK_TRANSLATE_OPTIONS_INPUT_ID_YANDEX_API_KEY = "#yandexApiKey";
 
-function isDefined(value) {
-    return !(value === undefined);
-}
-
-function isFunction(functionName) {
-    return (typeof functionName == 'function');
-}
-
-function getFormattedDateTime(dateTime) {
-    if (isFunction(dateTime.getMonth)) {
-        const day = dateTime.getDay();
-        const monthIndex = dateTime.getMonth();
-        const year = dateTime.getFullYear();
-        const hour = dateTime.getHours();
-        const min = dateTime.getMinutes();
-        const sec = dateTime.getSeconds();
-
-        return day + "." + (monthIndex+1) + "." + year + " " + hour + ":" + min + ":" + sec;
-    }
-    return null;
-}
-
 function logDebug(text) {
-    console.debug(PK_TRANSLATE_APP_NAME + ": [" + getFormattedDateTime(new Date()) + "] " + text);
+    serviceFunctions.logDebugApplication(PK_TRANSLATE_APP_NAME, text);
 }
 
 function logError(text) {
-    console.error(PK_TRANSLATE_APP_NAME + ": [" + getFormattedDateTime(new Date()) + "] " + text);
+    serviceFunctions.logErrorApplication(PK_TRANSLATE_APP_NAME, text);
 }
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
