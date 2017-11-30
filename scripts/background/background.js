@@ -10,10 +10,6 @@ function logError(text) {
 
 logDebug("loaded");
 
-// browser.browserAction.onClicked.addListener(function(e) {
-//     toggleStartTranslate();
-// });
-
 /**
  * Click-handler.
  * If we couldn't inject the script, handle the error.
@@ -29,59 +25,63 @@ function toggleStartTranslate() {
 /**
  * Click button "Translate"
  */
-function clickStartTranslate() {
+function askForSelectedText() {
     browser.tabs.query({currentWindow: true, active: true}).then(function(result) {
         logDebug("message send to content_script script");
         browser.tabs.sendMessage(result[0].id, {
-            command: "askSelected"
+            command: COMMANDS.BG_TAKE_SELECTED_TEXT
         });
     }, function(error) {
         logDebug("error getting current tab");
     });
 }
 
-/**
+/*
  * There was an error executing the script.
  * Display the popup's error message, and hide the normal UI.
- */
 function reportExecuteScriptError(error) {
     // document.querySelector("#popup-content").classList.add("hidden");
     // document.querySelector("#error-content").classList.remove("hidden");
     logError("Failed to execute PKTranslate content script: ${error.message}");
-}
+}*/
 
 //******************************************************************************
 /**
  * Listen for messages from the content_script.
  */
 browser.runtime.onMessage.addListener((message) => {
-    logDebug("message received");
-    if (message.command === "PANEL_SCRIPT_LOADED") {
-        logDebug("message PANEL_SCRIPT_LOADED received from panel_script script");
-        clickStartTranslate();
+    logDebug("message received with command:" + message.command);
+    if (message.command === COMMANDS.PANEL_SCRIPT_LOADED) {
+        logDebug("message "+ COMMANDS.PANEL_SCRIPT_LOADED +" received from panel_script script");
+        askForSelectedText();
     } else
-    if (message.command === "takeSelected") {
+    if (message.command === COMMANDS.CS_RETURN_SELECTED_TEXT) {
         logDebug("message received from content_script script");
         const selected = message.selected;
         logDebug(selected);
 
-        restoreOptions(function(apiKey){
+        getOptions(function(apiKey){
             if (!serviceFunctions.isDefined(apiKey) || apiKey === null) {
                 logError("Yandex API key value not defined");
-            }
-            translatorByYandex.doTranslate(selected, apiKey, function(text) {
-                logDebug("Get translated text: "+ text);
-
                 browser.runtime.sendMessage(null, {
-                    command: "TRANSLATED_TEXT",
-                    text: text
+                    command: COMMANDS.PANEL_TRANSLATED_TEXT,
+                    text: "Yandex API key value not defined"
                 });
-            });
+            } else {
+                translatorByYandex.doTranslate(selected, apiKey, function (text) {
+                    logDebug("Get translated text: " + text);
+
+                    browser.runtime.sendMessage(null, {
+                        command: COMMANDS.PANEL_TRANSLATED_TEXT,
+                        text: text
+                    });
+                });
+            }
         });
     }
 });
 
-function restoreOptions(doAfterRestoreFunction) {
+function getOptions(doAfterRestoreFunction) {
     browser.storage.local.get(PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY).then(function(result) {
         let apiKey;
         if (result instanceof Array && result.length === 1) { //for old Firefox
