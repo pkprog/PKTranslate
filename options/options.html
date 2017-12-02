@@ -4,6 +4,8 @@
 <head>
     <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Yandex.Translate API ключ</title>
+    <script src="/lib/constants.js" type="application/javascript"></script>
+    <script src="/lib/utils.js" type="application/javascript"></script>
 </head>
 <body>
     <form>
@@ -12,26 +14,25 @@
             <p><a id="linkToYandexAPI"
                   href="https://tech.yandex.ru/translate/"
                   target="_blank"
-                  style="font-family: 'Segoe UI', sans-serif; font-size: 1.25rem;"
+                  style="font-family: Arial, 'Segoe UI', sans-serif; font-size: 1.25rem;"
             >API-Ключ (бесплатный), полученный от yandex: https://tech.yandex.ru/translate/
             </a></p>
         </div>
+        <!--value="trnsl.1.1.20151025T080555Z.2fda8626df3d044c.4c770ec94a3babad2518ba4375b72ea066335390"-->
         <div style="width: 100%;">
             <label id="yandexApiKeyLabel" for="yandexApiKey" style="display: inline-block; font-family: 'Segoe UI', sans-serif;font-size: 1.25rem;">Yandex.Translate API ключ</label>
             <input id="yandexApiKey"
                    type="text"
                    maxlength="2000"
                    title="API-Ключ (бесплатный) полученный от yandex: https://tech.yandex.ru/translate/"
-                   value="trnsl.1.1.20151025T080555Z.2fda8626df3d044c.4c770ec94a3babad2518ba4375b72ea066335390"
+                   value=""
                    style="width: 80%"
             />
         </div>
         <div style="width: 100%;">
-            <button class="" style="width: 90px;" onclick="false">Save</button>
+            <button class="" style="width: 100px; text-align: center" onclick="false">Save</button>
         </div>
     </form>
-    <script src="/lib/constants.js"></script>
-    <script src="/lib/utils.js"></script>
-    <script src="options.js"></script>
+    <script src="options.js" type="application/javascript"></script>
 </body>
 </html>

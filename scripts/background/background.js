@@ -11,18 +11,6 @@ function logError(text) {
 logDebug("loaded");
 
 /**
- * Click-handler.
- * If we couldn't inject the script, handle the error.
- */
-function toggleStartTranslate() {
-    logDebug("toggle StartTranslate");
-
-    clickStartTranslate();
-    // browser.tabs.executeScript({file: "/scripts/webpage/content_script.js"})
-    //     .then(clickStartTranslate)
-    //     .catch(reportExecuteScriptError);
-}
-/**
  * Click button "Translate"
  */
 function askForSelectedText() {
@@ -32,7 +20,7 @@ function askForSelectedText() {
             command: COMMANDS.BG_TAKE_SELECTED_TEXT
         });
     }, function(error) {
-        logDebug("error getting current tab");
+        logError("error getting current tab: "+ error);
     });
 }
 
@@ -56,16 +44,16 @@ browser.runtime.onMessage.addListener((message) => {
         askForSelectedText();
     } else
     if (message.command === COMMANDS.CS_RETURN_SELECTED_TEXT) {
-        logDebug("message received from content_script script");
+        logDebug("message "+ COMMANDS.PANEL_SCRIPT_LOADED +" received from content_script script");
         const selected = message.selected;
-        logDebug(selected);
+        logDebug("Selected text:" + selected);
 
         getOptions(function(apiKey){
-            if (!serviceFunctions.isDefined(apiKey) || apiKey === null) {
+            if (!serviceFunctions.isDefined(apiKey) || apiKey === null || apiKey.length === 0) {
                 logError("Yandex API key value not defined");
                 browser.runtime.sendMessage(null, {
                     command: COMMANDS.PANEL_TRANSLATED_TEXT,
-                    text: "Yandex API key value not defined"
+                    text: "Не указан Yandex API key"
                 });
             } else {
                 translatorByYandex.doTranslate(selected, apiKey, function (text) {
