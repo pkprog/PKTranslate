@@ -27,9 +27,15 @@ function restoreOptions() {
     browser.storage.local.get(PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY).then(function(result) {
         logDebug("Restore options successful");
         if (result instanceof Array && result.length === 1) { //for old Firefox
-            logDebug("Restore options: Old Firefox request: " + result[0][PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY]);
+            let apiKey = result[0][PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY];
+            if (!!apiKey) {} else apiKey = "";
+            logDebug("Restore options: Old Firefox request: " + apiKey);
+            document.querySelector(PK_TRANSLATE_OPTIONS_INPUT_ID_YANDEX_API_KEY).value = apiKey;
         } else { //for new Firefox
-            logDebug("Restore options: New Firefox request: " + result[PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY]);
+            let apiKey = result[PK_TRANSLATE_OPTIONS_KEY_YANDEX_API_KEY];
+            if (!!apiKey) {} else apiKey = "";
+            logDebug("Restore options: New Firefox request: " + apiKey);
+            document.querySelector(PK_TRANSLATE_OPTIONS_INPUT_ID_YANDEX_API_KEY).value = apiKey;
         }
     }, function(error) {
         logError("Error restoring options:" + error);
